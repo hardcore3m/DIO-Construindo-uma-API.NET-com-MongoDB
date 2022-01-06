@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt_BR">
+
+<head>
+  <meta charset="UTF-8">
+  <title>MY APP</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+  <section id="editSection" style="display: none;"></section>
+  <section id="frameworks">
+    <h1>Frameworks e Bibliotecas</h1>
+
+    <% for(var i=0; i<frameworks.length; i++) {%>
+
+    <div class="framework">
+      <h3><%= frameworks[i].name %></h3>
+      <p> <strong> Tipo: </strong> <%= frameworks[i].categories %></p>      
+      <p><strong>Documentação: </strong> <a href=" <%= frameworks[i].documentation %> " target="_blank" rel="noopener noreferrer"><%= frameworks[i].documentation %></a><br>
+
+      <button id="<%= frameworks[i].id %>" class="editButton"
+        onclick="edit('<%= frameworks[i].id %>','<%= frameworks[i].name %>','<%= frameworks[i].categories %>','<%= frameworks[i].documentation %>')">Editar</button>
+
+      <button id="<%= frameworks[i].id %>" class="delButton"
+        onclick="erase('<%= frameworks[i].id %>','<%= frameworks[i].name %>','<%= frameworks[i].categories %>','<%= frameworks[i].documentation %>')">Apagar</button>
+    </div>
+    <hr>
+    <% } %>
+
+    <button type="button" id="newFramework" onclick="newFramework()">Adicionar novo framework</button>
+
+  </section>
+
+
+  <script>
+    const categoryArray = ["Javascript", "Style", "Csharp", "C++", "Npm", "Database", "Container", "SQL", "NoSQL"]
+
+    function newFramework() {
+      // Amostra a section para adicionar conteudo
+      $('#editSection').show(500)
+
+      $('#editSection').append(
+        `<div>
+            <h2>Adicionar novo framework</h2>
+
+            <form action="/frameworks" method="POST">
+              <input type="hidden" name="id" value="<%= frameworks.length %>"
+              <label for="name">Nome: </label><br>              
+              <input type="text" placeholder="name" name="name"><br>
+              <label for="categories">Tipo: </label><br>
+              <select name="categories" id="categories"></select><br>
+              <label for="documentation">Documentação: </label><br>
+              <input type="text" name="documentation" placeholder="documentation"><br>
+              <button type="submit">Adicionar</button>
+              <button type="button" id="cancel" onclick="closeSection()">Voltar</button>
+            </form>
+        </div>`
+      )
+      $(categoryArray).each(function () {
+      $('#categories').append(`<option value="${this}">${this}</option>`)
+    })
+    }
+
+    function edit(id, name, category, documentation) {
+      // Amostra a section de atualização
+      $('#editSection').show(500)
+
+      $('#editSection').append(`
+          <div>
+          <h2>Deseja alterar o framework ${name}? </h2>
+          <form  method="POST" action="/frameworks/update">
+          <input type="hidden" name="id" value="${id}"  readonly><br>
+          <label for="name">Nome: </label><br>
+          <input type="text"  value="${name}" name="name"><br>
+          <label for="categories">Tipo:</label><br>
+          <select name="categories" id="selectCategory"></select><br>
+          <label for="documentation">Documentação: </label><br>
+          <input type="text" name="documentation" value="${documentation}"><br>
+          <button type="submit" id="update">Atualizar conteúdo</button>
+          <button type="button" id="cancel" onclick="closeSection()">Voltar</button>
+          </form>
+          </div>
+          `)
+      $(categoryArray).each(function () {
+        if (this == category) {
+          $('#selectCategory').append(`<option value="${this}" selected>${this}</option>`)
+        } else {
+          $('#selectCategory').append(`<option value="${this}">${this}</option>`)
+        }
+      })
+    }
+
+    function erase(id, name, category, documentation) {
+      // Amostra a section de atualização
+      $('#editSection').show(500)
+      $('#editSection').append(`
+          <div>
+          <h2>Deseja apagar o framework ${name}? </h2>
+          <form  method="POST" action="/frameworks/erase">
+          <input type="hidden" name="id" value="${id}" readonly><br>
+          <label for="name">Nome: </label><br>
+          <input type="text"  value="${name}" name="name" readonly><br>
+          <input type="text"  value="${category}" name="name" readonly><br>
+          <label for="documentation">Documentação: </label><br>
+          <input type="text" name="documentation" value="${documentation}" readonly><br>
+          <button type="submit" id="erase">Apagar conteúdo</button>
+          <button type="button" id="cancel" onclick="closeSection()">Voltar</button>
+          </form>
+          </div>
+          `)
+
+    }
+
+    function closeSection() {
+      // Esconde a section de atualização
+      $('#editSection').toggle(500)
+      $('#editSection').empty()
+
+    }
+  </script>
+
+</body>
+
+</html>

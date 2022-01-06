@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>MY APP</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+  <h1>Frameworks e Bibliotecas</h1>
+
+  <section id="frameworks">
+    <% for(var i=0; i<frameworks.length; i++) {%>
+
+    <div class="framework">
+      <h3><%= frameworks[i].name %></h3>
+      <p><%= frameworks[i].categories %></p>
+      <p><%= frameworks[i].documentation %></p>
+
+      <button id="<%= frameworks[i]._id %>"
+        onclick="edit('<%= frameworks[i]._id %>','<%= frameworks[i].name %>','<%= frameworks[i].categories %>','<%= frameworks[i].documentation %>')">Editar</button>
+    </div>
+    <% } %>
+  </section>
+
+  <section>
+    <details>
+      <summary>
+        <h2>Adicionar um framework</h2>
+      </summary>
+      <form action="/frameworks" method="POST">
+        <input type="text" placeholder="name" name="name"><br>
+        <label for="categories">Tipo:</label>
+        <select name="categories" id="categories"></select><br>
+        <input type="text" name="documentation" placeholder="documentation">
+        <button type="submit">Submit</button>
+      </form>
+    </details>
+  </section>
+  <section id="editSection" style="display: none;"></section>
+  <!-- 
+
+  <div>
+    <h2>Delete Darth Vadar's first framework</h2>
+    <button id="delete"> Delete first Darth Vadar framework </button>
+  </div> -->
+
+
+  <script>
+    var del = document.getElementById('delete')
+    const categoryArray = ["Javascript", "Style", "Csharp", "C++", "Npm", "Database", "Container", "SQL", "NoSQL"]
+
+    $(categoryArray).each(function () {
+      $('#categories').append(`<option value="${this}">${this}</option>`)
+    })
+
+    function edit(id, name, category, documentation) {
+      // Amostra a section de atualização
+      $('#editSection').show(500)
+      // Se o index do botão for diferente de 1 ele desabilita o botão
+      $('button').each(function () {
+          
+          if ($(this).css('z-index') !== 1) {
+            $(this).prop('disabled', true);
+        }        
+      })
+
+      
+
+      $('#editSection').append(`
+        
+          <form  method="POST" action="/frameworks/update">
+          <input type="hidden" name="id" value="${id}"  readonly><br>
+          <input type="text"  value="${name}" name="name"><br>
+          <label for="categories">Tipo:</label>
+          <select name="categories" id="selectCategory"></select><br>
+          <input type="text" name="documentation" value="${documentation}"><br>
+          <button type="submit" id="update">Submit</button>
+          </form>
+          `)
+      $(categoryArray).each(function () {
+        if (this == category) {
+          $('#selectCategory').append(`<option value="${this}" selected>${this}</option>`)
+        } else {
+          $('#selectCategory').append(`<option value="${this}">${this}</option>`)
+        }
+      })
+    }
+  </script>
+
+</body>
+
+</html>

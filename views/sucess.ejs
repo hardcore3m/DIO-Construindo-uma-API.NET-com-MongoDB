@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>MY APP</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+  <h1>Item <%= action %> com sucesso</h1>
+  Retornando à lista de itens...
+</body>
+<script>
+   let redirect_Page = () => {
+        let tID = setTimeout(function () {
+            window.location.href = "/frameworks";
+            window.clearTimeout(tID);		// clear time out.
+        }, 1000);
+    }
+    redirect_Page()
+</script>
+
+</html>
